@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ElectroMart — Магазин электроники</title>
+  <meta name="description" content="Тестовый лендинг магазина электроники: витрина товаров, корзина, поиск, адаптивная вёрстка." />
+  <meta property="og:title" content="ElectroMart — Магазин электроники" />
+  <meta property="og:description" content="Тестовый лендинг магазина электроники: витрина товаров, корзина, поиск, адаптивная вёрстка." />
+  <meta property="og:type" content="website" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='48' fill='%23000'/%3E%3Cpath d='M86 172l84-88-36 70h36l-84 88 36-70z' fill='%23fff'/%3E%3C/svg%3E" />
+  <style>
+    /* --- CSS Reset (modern-normalize-ish) --- */
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    img,svg,video,canvas{display:block;max-width:100%}
+    button,input,select,textarea{font:inherit}
+    a{color:inherit;text-decoration:none}
+
+    /* --- Theme --- */
+    :root{
+      --bg: #0b0d12;          /* dark background for gradients */
+      --surface: #0f1420;
+      --text: #0b1220;
+      --muted: #667085;
+      --primary: #3b82f6;
+      --primary-600: #2563eb;
+      --ring: 0 0 0 3px rgb(59 130 246 / .35);
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --shadow: 0 10px 30px rgba(2,6,23,.15);
+      --radius: 16px;
+      --radius-lg: 22px;
+    }
+    [data-theme="dark"]{
+      --card: #0d1117;
+      --surface: #0b0f17;
+      --text: #e5e7eb;
+      --border: #1f2937;
+      --muted: #9aa4b2;
+      --shadow: 0 10px 30px rgba(0,0,0,.45);
+    }
+
+    body{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: linear-gradient(180deg, #f8fafc 0%, #ffffff 35%) fixed;
+    }
+    [data-theme="dark"] body{
+      background: radial-gradient(1200px 600px at 20% -10%, #111827 0%, transparent 60%),
+                  radial-gradient(800px 400px at 110% -20%, #0b1220 0%, transparent 60%),
+                  #0b0d12;
+      color: var(--text);
+    }
+
+    .container{max-width:1120px;margin:0 auto;padding:0 20px}
+    .grid{display:grid;gap:20px}
+
+    /* Header */
+    header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.7);backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--border)}
+    [data-theme="dark"] header{background:rgba(13,17,23,.6)}
+    .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800}
+    .logo-icon{width:28px;height:28px;border-radius:8px;background: conic-gradient(from 220deg, #60a5fa, #22d3ee, #a78bfa, #60a5fa); box-shadow: 0 6px 18px rgba(59,130,246,.35)}
+    .nav-actions{display:flex;align-items:center;gap:10px}
+    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);padding:10px 14px;border-radius:12px;background:var(--card);box-shadow:var(--shadow);cursor:pointer;transition:transform .1s ease, box-shadow .2s ease}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(180deg, var(--primary), var(--primary-600)); color:#fff;border:none}
+    .icon{width:18px;height:18px}
+
+    /* Hero */
+    .hero{position:relative;overflow:hidden;padding:48px 0}
+    .hero-inner{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:center}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:var(--card);box-shadow:var(--shadow);color:var(--muted);font-size:12px}
+    .title{font-size:clamp(28px, 4.2vw, 48px);line-height:1.05;margin:14px 0 10px;font-weight:900}
+    .subtitle{font-size:clamp(14px, 1.6vw, 18px);color:var(--muted);max-width:52ch}
+    .hero-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow)}
+
+    /* Controls */
+    .controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .input{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--border);background:var(--card);border-radius:12px;box-shadow:var(--shadow)}
+    .input input{border:none;outline:none;background:transparent;min-width:220px}
+    .segmented{display:flex;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    .segmented button{border:none;background:var(--card);padding:10px 12px}
+    .segmented button[aria-pressed="true"]{background:linear-gradient(180deg, #f3f4f6, #fff)}
+    [data-theme="dark"] .segmented button[aria-pressed="true"]{background:#111827}
+
+    /* Products */
+    .section-title{font-weight:800;font-size:24px;margin:10px 0 0}
+    .products{grid-template-columns:repeat(12,1fr)}
+    .card{grid-column:span 4;background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+    .card-media{background:linear-gradient(135deg, #f1f5f9, #fafafa);display:flex;align-items:center;justify-content:center;height:180px}
+    [data-theme="dark"] .card-media{background:linear-gradient(135deg, #0f172a, #111827)}
+    .price{font-weight:800;font-size:20px}
+    .tag{font-size:12px;color:var(--muted);border:1px dashed var(--border);border-radius:999px;padding:4px 8px}
+    .card-body{display:flex;flex-direction:column;gap:10px;padding:14px}
+    .card-actions{display:flex;gap:10px;margin-top:auto}
+
+    /* Features */
+    .features{grid-template-columns:repeat(12,1fr)}
+    .feature{grid-column:span 3;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;display:flex;gap:12px;align-items:flex-start;box-shadow:var(--shadow)}
+
+    /* Testimonials */
+    .quotes{grid-template-columns:repeat(12,1fr)}
+    .quote{grid-column:span 6;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+
+    /* Newsletter */
+    .newsletter{background:linear-gradient(135deg, rgba(59,130,246,.12), rgba(168,85,247,.12));border:1px solid var(--border);border-radius:20px;padding:20px}
+
+    /* Footer */
+    footer{border-top:1px solid var(--border);padding:36px 0;margin-top:40px;color:var(--muted)}
+
+    /* Cart Drawer */
+    .cart-fab{position:fixed;right:20px;bottom:20px;display:flex;align-items:center;gap:8px;padding:12px 14px;border-radius:999px;background:linear-gradient(180deg, var(--primary), var(--primary-600));color:#fff;border:none;box-shadow:0 10px 24px rgba(37,99,235,.45);cursor:pointer;z-index:60}
+    .drawer{position:fixed;inset:0;pointer-events:none}
+    .drawer.open{pointer-events:auto}
+    .drawer-backdrop{position:absolute;inset:0;background:rgba(2,6,23,.5);opacity:0;transition:opacity .2s ease}
+    .drawer.open .drawer-backdrop{opacity:1}
+    .drawer-panel{position:absolute;top:0;right:-420px;width:100%;max-width:420px;height:100%;background:var(--card);border-left:1px solid var(--border);box-shadow:var(--shadow);transition:right .25s ease;display:flex;flex-direction:column}
+    .drawer.open .drawer-panel{right:0}
+    .drawer-header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);padding:14px 16px}
+    .drawer-body{flex:1;overflow:auto;padding:12px}
+    .cart-item{display:flex;gap:12px;align-items:center;border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:10px}
+    .drawer-footer{border-top:1px solid var(--border);padding:14px 16px}
+
+    /* Responsive */
+    @media (max-width: 960px){
+      .hero-inner{grid-template-columns:1fr}
+      .card{grid-column:span 6}
+      .feature{grid-column:span 6}
+      .quote{grid-column:span 12}
+    }
+    @media (max-width: 640px){
+      .card{grid-column:span 12}
+      .feature{grid-column:span 12}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav" role="navigation" aria-label="Основная навигация">
+      <div class="logo" aria-label="ElectroMart">
+        <span class="logo-icon" aria-hidden="true"></span>
+        <span>ElectroMart</span>
+      </div>
+      <nav class="nav-actions" aria-label="Действия">
+        <button class="btn" id="themeToggle" aria-pressed="false" title="Переключить тему">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z"/></svg>
+          Тема
+        </button>
+        <a class="btn" href="#products">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 12.39A2 2 0 0 0 9.61 15h7.78a2 2 0 0 0 2-1.61l1.2-6.39H6"/></svg>
+          Каталог
+        </a>
+        <a class="btn primary" href="#newsletter">Подписаться</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <div>
+          <span class="pill">Новый сезон скидок · -20% на аксессуары</span>
+          <h1 class="title">Техника, которая вдохновляет. Цены, которые радуют.</h1>
+          <p class="subtitle">Собрали лучшие смартфоны, ноутбуки, аудио и умный дом в одном месте. Быстрая доставка по стране и поддержка 7/7.</p>
+          <div class="controls">
+            <label class="input" for="search">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input id="search" type="search" placeholder="Поиск: смартфон, наушники..." aria-label="Поиск по каталогу" />
+            </label>
+            <div class="segmented" role="group" aria-label="Фильтр категории">
+              <button class="cat" data-cat="all" aria-pressed="true">Все</button>
+              <button class="cat" data-cat="smartphones">Смартфоны</button>
+              <button class="cat" data-cat="laptops">Ноутбуки</button>
+              <button class="cat" data-cat="audio">Аудио</button>
+              <button class="cat" data-cat="smarthome">Умный дом</button>
+            </div>
+          </div>
+        </div>
+        <div class="hero-card">
+          <img alt="Коллаж электроники" src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1200&auto=format&fit=crop" style="border-radius:14px"/>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="products" class="container" aria-labelledby="productsTitle">
+      <h2 id="productsTitle" class="section-title">Популярные товары</h2>
+      <div id="productGrid" class="grid products" style="margin-top:14px"></div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="container" style="margin-top:34px">
+      <div class="grid features">
+        <div class="feature">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <div>
+            <strong>Гарантия 2 года</strong>
+            <div class="muted">Официальная техника с поддержкой в авторизованных сервисах.</div>
+          </div>
+        </div>
+        <div class="feature">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          <div>
+            <strong>Оплата как удобно</strong>
+            <div class="muted">Картой, рассрочка и оплата при получении.</div>
+          </div>
+        </div>
+        <div class="feature">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <div>
+            <strong>Поддержка 7/7</strong>
+            <div class="muted">Ответим в чате, по телефону и в социальных сетях.</div>
+          </div>
+        </div>
+        <div class="feature">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3h18v14H3z"/><path d="M8 21h8"/></svg>
+          <div>
+            <strong>Возврат 30 дней</strong>
+            <div class="muted">Если что-то пошло не так — вернём деньги без вопросов.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="container" style="margin-top:34px">
+      <div class="grid quotes">
+        <figure class="quote">
+          <blockquote>«Оформил заказ вечером — уже на следующий день получил ноутбук. Отличная упаковка, всё быстро и понятно.»</blockquote>
+          <figcaption class="muted">— Алексей, Москва</figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote>«Порадовала цена и бонусы. Наушники — топ, консультант помог выбрать между несколькими моделями.»</blockquote>
+          <figcaption class="muted">— Екатерина, Казань</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section id="newsletter" class="container" style="margin-top:34px">
+      <div class="newsletter">
+        <div class="grid" style="grid-template-columns:1.2fr 1fr; align-items:center">
+          <div>
+            <h3 style="margin:0 0 8px">Скидка 5% за подписку</h3>
+            <p class="muted" style="margin:0">Получайте новости о распродажах и новые обзоры раз в неделю.</p>
+          </div>
+          <form id="newsletterForm" class="grid" style="grid-template-columns:1fr auto; gap:10px" novalidate>
+            <label class="input" style="padding:0">
+              <input id="emailInput" type="email" placeholder="email@example.com" aria-label="Email" style="padding:10px 12px; width:100%" required />
+            </label>
+            <button class="btn primary" type="submit">Подписаться</button>
+            <small id="newsletterMsg" class="muted" style="grid-column:1 / -1"></small>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="logo-icon" aria-hidden="true"></span>
+          <strong>ElectroMart</strong>
+          <span class="muted">© <span id="year"></span></span>
+        </div>
+        <div class="muted">Демо-проект. Товары, цены и бренд вымышлены.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cart FAB + Drawer -->
+  <button id="cartFab" class="cart-fab" aria-haspopup="dialog" aria-controls="cartDrawer" aria-expanded="false">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 12.39A2 2 0 0 0 9.61 15h7.78a2 2 0 0 0 2-1.61l1.2-6.39H6"/></svg>
+    Корзина · <span id="cartCount">0</span>
+  </button>
+
+  <div id="cartDrawer" class="drawer" role="dialog" aria-modal="true" aria-label="Корзина">
+    <div class="drawer-backdrop" data-close></div>
+    <aside class="drawer-panel">
+      <div class="drawer-header">
+        <strong>Корзина</strong>
+        <button class="btn" data-close>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          Закрыть
+        </button>
+      </div>
+      <div id="cartItems" class="drawer-body"></div>
+      <div class="drawer-footer">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div class="muted">Итого</div>
+            <div class="price"><span id="cartTotal">0</span> ₽</div>
+          </div>
+          <button class="btn primary" id="checkoutBtn">Оформить</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // ---- Demo Data ----
+    const PRODUCTS = [
+      {id: 'p1', title: 'Smartphone Nova X', price: 59990, cat: 'smartphones', tag: 'Новинка', img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1200&auto=format&fit=crop', specs: '6.7" OLED · 128 ГБ'},
+      {id: 'p2', title: 'Notebook Aero 14', price: 99990, cat: 'laptops', tag: 'Топ продаж', img: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1200&auto=format&fit=crop', specs: 'i7 · 16 ГБ · 512 ГБ SSD'},
+      {id: 'p3', title: 'Earbuds AirLite', price: 7990, cat: 'audio', tag: 'Скидка -15%', img: 'https://images.unsplash.com/photo-1585386959984-a41552231658?q=80&w=1200&auto=format&fit=crop', specs: 'ANC · 24 ч'},
+      {id: 'p4', title: 'Smart Speaker Wave', price: 12990, cat: 'smarthome', tag: 'Хит', img: 'https://images.unsplash.com/photo-1543512214-318c7553f230?q=80&w=1200&auto=format&fit=crop', specs: 'Голосовой помощник'},
+      {id: 'p5', title: 'Gaming Headset FX', price: 10990, cat: 'audio', tag: 'Игры', img: 'https://images.unsplash.com/photo-1599669454699-248893623440?q=80&w=1200&auto=format&fit=crop', specs: '7.1 Surround'},
+      {id: 'p6', title: 'Ultrabook Zen 13', price: 119990, cat: 'laptops', tag: 'Лёгкий', img: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1200&auto=format&fit=crop', specs: 'i5 · 16 ГБ · 1 ТБ SSD'}
+    ];
+
+    const state = {
+      cat: 'all',
+      query: '',
+      cart: []
+    };
+
+    const $$ = (sel, root=document) => root.querySelector(sel);
+    const $$$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+    // ---- Theme ----
+    const themeToggle = $$('#themeToggle');
+    const root = document.documentElement;
+    const saveTheme = t => localStorage.setItem('theme', t);
+    const loadTheme = () => localStorage.getItem('theme');
+    const setTheme = t => { root.setAttribute('data-theme', t); themeToggle.setAttribute('aria-pressed', t==='dark'); };
+    setTheme(loadTheme() || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+    themeToggle.addEventListener('click', () => {
+      const t = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      setTheme(t); saveTheme(t);
+    });
+
+    // ---- Year ----
+    $$('#year').textContent = new Date().getFullYear();
+
+    // ---- Render Products ----
+    const grid = $$('#productGrid');
+    function formatPrice(n){ return n.toLocaleString('ru-RU'); }
+    function productCard(p){
+      const el = document.createElement('article');
+      el.className = 'card';
+      el.setAttribute('data-cat', p.cat);
+      el.innerHTML = `
+        <div class="card-media"><img src="${p.img}" alt="${p.title}" style="height:100%;object-fit:cover"></div>
+        <div class="card-body">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <h3 style="margin:0;font-size:18px">${p.title}</h3>
+            <span class="tag">${p.tag}</span>
+          </div>
+          <div class="muted">${p.specs}</div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div class="price">${formatPrice(p.price)} ₽</div>
+          </div>
+          <div class="card-actions">
+            <button class="btn" data-id="${p.id}" data-action="favorite" title="В избранное">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              Лайк
+            </button>
+            <button class="btn primary" data-id="${p.id}" data-action="add">В корзину</button>
+          </div>
+        </div>`;
+      return el;
+    }
+    function render(){
+      grid.innerHTML = '';
+      const q = state.query.trim().toLowerCase();
+      PRODUCTS.filter(p => state.cat==='all' || p.cat===state.cat)
+        .filter(p => !q || (p.title+" "+p.specs).toLowerCase().includes(q))
+        .forEach(p => grid.appendChild(productCard(p)));
+    }
+
+    // ---- Filters ----
+    $$$('.cat').forEach(btn => btn.addEventListener('click', () => {
+      $$$('.cat').forEach(b => b.setAttribute('aria-pressed','false'));
+      btn.setAttribute('aria-pressed','true');
+      state.cat = btn.dataset.cat; render();
+    }));
+    $$('#search').addEventListener('input', (e)=>{ state.query = e.target.value; render(); });
+
+    // ---- Cart ----
+    const cartFab = $$('#cartFab');
+    const drawer = $$('#cartDrawer');
+    const cartItems = $$('#cartItems');
+    const cartCount = $$('#cartCount');
+    const cartTotal = $$('#cartTotal');
+
+    function updateCartUI(){
+      cartItems.innerHTML = '';
+      let total = 0;
+      state.cart.forEach(item => {
+        const p = PRODUCTS.find(x=>x.id===item.id);
+        const row = document.createElement('div');
+        row.className = 'cart-item';
+        row.innerHTML = `
+          <img src="${p.img}" alt="${p.title}" style="width:64px;height:64px;object-fit:cover;border-radius:8px">
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
+              <strong>${p.title}</strong>
+              <button class="btn" data-remove="${p.id}">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                Удалить
+              </button>
+            </div>
+            <div class="muted">${p.specs}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+              <button class="btn" data-dec="${p.id}">−</button>
+              <span aria-live="polite">${item.qty}</span>
+              <button class="btn" data-inc="${p.id}">+</button>
+              <span style="margin-left:auto"><strong>${formatPrice(p.price*item.qty)} ₽</strong></span>
+            </div>
+          </div>`;
+        cartItems.appendChild(row);
+        total += p.price * item.qty;
+      });
+      cartCount.textContent = state.cart.reduce((n, i) => n + i.qty, 0);
+      cartTotal.textContent = formatPrice(total);
+    }
+
+    function openCart(){ drawer.classList.add('open'); cartFab.setAttribute('aria-expanded','true'); }
+    function closeCart(){ drawer.classList.remove('open'); cartFab.setAttribute('aria-expanded','false'); }
+
+    document.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      // add to cart
+      if(btn.dataset.action==='add'){
+        const id = btn.dataset.id;
+        const existing = state.cart.find(x=>x.id===id);
+        if(existing) existing.qty++; else state.cart.push({id, qty:1});
+        updateCartUI(); openCart();
+      }
+      if(btn.hasAttribute('data-close')) closeCart();
+      if(btn.dataset.remove){
+        state.cart = state.cart.filter(x=>x.id!==btn.dataset.remove);
+        updateCartUI();
+      }
+      if(btn.dataset.inc){
+        const itm = state.cart.find(x=>x.id===btn.dataset.inc); if(itm) { itm.qty++; updateCartUI(); }
+      }
+      if(btn.dataset.dec){
+        const itm = state.cart.find(x=>x.id===btn.dataset.dec); if(itm){ itm.qty = Math.max(1, itm.qty-1); updateCartUI(); }
+      }
+    });
+
+    cartFab.addEventListener('click', openCart);
+    $$$('[data-close]').forEach(el => el.addEventListener('click', closeCart));
+
+    // ---- Newsletter (demo) ----
+    $$('#newsletterForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const email = $$('#emailInput').value.trim();
+      const msg = $$('#newsletterMsg');
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        msg.textContent = 'Укажите корректный email.'; msg.style.color = 'tomato'; return;
+      }
+      msg.textContent = 'Спасибо! Письмо с промокодом уже летит к вам ✉️';
+      msg.style.color = 'inherit';
+      e.target.reset();
+    });
+
+    // ---- Init ----
+    render();
+  </script>
+</body>
+</html>
